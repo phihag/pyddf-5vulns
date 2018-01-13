@@ -1,0 +1,158 @@
+.reveal {
+	font-family: Helvetica, sans-serif;
+	font-size: 36px;
+	font-weight: normal;
+	color: #111;
+}
+
+.reveal a {
+	text-decoration: none;
+	color: #22a;
+}
+.reveal a:hover {
+	color: #0000ff;
+	text-decoration: underline;
+}
+
+
+.reveal h1 {
+	font-size: 2.4em;
+	color: #000;
+	margin-top: 30px;
+	margin-bottom: 70px;
+	line-height: 1.2em;
+}
+.reveal h2 {
+	color: #333;
+	font-size: 1.4em;
+	margin-bottom: 50px;
+}
+
+.reveal .title-sub {
+	color: #595959;
+	font-size: 1.5em;
+}
+.reveal .title,
+.reveal .title-sub {
+	border-radius: 0.1em;
+	padding: 0.1em 0.2em;
+	background: rgba(255, 255, 255, 0.8);
+}
+
+.reveal .footer {
+	position: absolute;
+	font-size: 28px;
+	left: 0;
+	right: 0;
+	bottom: 50px;
+	text-align: center;
+	color: #666;
+	z-index: 3;
+}
+.reveal .slide-number {
+	left: 40px;
+	bottom: 44px;
+	color: #666;
+	background: #fff;
+	right: auto;
+	font-size: 34px;
+}
+
+
+.reveal .controls .navigate-down, .reveal .controls .navigate-up {
+	display: none;
+}
+.reveal section {
+	text-align: left;
+}
+.reveal section.front {
+	text-align: center;
+}
+
+
+
+.reveal ol,
+.reveal dl,
+.reveal ul {
+	display: inline-block;
+	text-align: left;
+	margin: 0 0 0 1em;
+}
+.reveal ol li {
+	margin: 0.5em 0;
+}
+.reveal ul li {
+	margin: 0.3em 0;
+}
+
+.reveal ol {
+	list-style-type: decimal;
+}
+
+.reveal ul {
+	list-style-type: disc;
+}
+.reveal ul ul {
+	list-style-type: circle;
+}
+.reveal ul ul,
+.reveal ul ol,
+.reveal ol ol,
+.reveal ol ul {
+	display: block;
+	margin-left: 40px;
+}
+
+.reveal p {
+	margin: 0.6em 0;
+	line-height: 1.1em;
+}
+
+/*
+
+.reveal table {
+	border-collapse: collapse;
+}
+.reveal thead th {
+	border-bottom: 1px solid #bbb;
+}
+.reveal th {
+	color: #666;
+	padding: 0 0.2em;
+	margin: 0 0 0.1em 0;
+}
+.reveal td {
+	padding: 0.3em 0.3em;
+	vertical-align: middle;
+}
+.reveal td + td,
+.reveal th + th {
+	border-left: 1px solid #bbb;
+}
+
+.reveal em {
+	white-space: pre;
+	font-style: italic;
+}
+.reveal code {
+	font-family: monospace;
+}
+
+.reveal kbd {
+	font-family: Consolas, "Lucida Console", monospace;
+	display: inline-block;
+	border-radius: 6px;
+	padding: 0px 4px;
+	box-shadow: 3px 3px 3px #777;
+	margin: 0 0 4px 0;
+	vertical-align: text-bottom;
+	background: #eee;
+	font-weight: 500;
+	color: #555;
+	font-weight: 600;
+}
+
+.center-table td:not(:first-child) {
+	text-align: center;
+}
+*/

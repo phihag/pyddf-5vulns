@@ -1,0 +1,24 @@
+set up upload
+
+
+Command Injection
+SQL Injection
+Insecure pickle
+path traversal
+	start with string
+	better with library?
+Insecure modules (typosquatting)
+
+
+describe how to grep
+	describe how to fix
+makefile to create pdf
+
+
+
+Further ideas:
+insecure password storage
+missing auth
+Client-side security
+XSS
+CSRF
