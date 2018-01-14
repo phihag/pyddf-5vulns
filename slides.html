@@ -5,8 +5,9 @@
 <title>5 Sicherheitslücken in Deiner Python-Anwendung</title>
 <meta name="viewport" content="width=device-width" />
 
-<link rel="stylesheet" href="libs/reveal.css">
-<link rel="stylesheet" href="slides.css">
+<link rel="stylesheet" href="libs/hljs-style.css" />
+<link rel="stylesheet" href="libs/reveal.css" />
+<link rel="stylesheet" href="slides.css" />
 </head>
 <body>
 
@@ -32,18 +33,29 @@
 
 <section id="command-injection">
 <h2>Code-Beispiel</h2>
-<code class="block">from django.http import HttpResponse
+<pre><code class="block python">from django.http import HttpResponse
 import os
 
-def convert_base64(request):
+def vulnerable_handler(request):
     cmd = 'echo {} | base64'.format(
         request.POST['message'])
     b64 = os.popen(cmd).read()
 
     return HttpResponse(
-        '<html>Your: base64 {}!</html>'.format(b64))</code>
+        '<html>Your: base64 {}!</html>'.format(b64))</code></pre>
+
+<p class="fragment" style="margin-top:1.5em">Was ist hier falsch?</p>
+</section>
+
+<section>
+<h2>Command Injection</h2>
+<pre><code class="block python">cmd = 'echo {} | base64'.format(
+    request.POST['message'])
+b64 = os.popen(cmd).read()</code></pre>
+
 
 </section>
+
 
 </div>
 
