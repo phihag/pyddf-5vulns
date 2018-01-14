@@ -108,51 +108,11 @@
 	line-height: 1.1em;
 }
 
-/*
-
-.reveal table {
-	border-collapse: collapse;
-}
-.reveal thead th {
-	border-bottom: 1px solid #bbb;
-}
-.reveal th {
-	color: #666;
-	padding: 0 0.2em;
-	margin: 0 0 0.1em 0;
-}
-.reveal td {
-	padding: 0.3em 0.3em;
-	vertical-align: middle;
-}
-.reveal td + td,
-.reveal th + th {
-	border-left: 1px solid #bbb;
-}
-
-.reveal em {
-	white-space: pre;
-	font-style: italic;
-}
 .reveal code {
-	font-family: monospace;
+	font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace;
+	line-height: 1.15em;
 }
-
-.reveal kbd {
-	font-family: Consolas, "Lucida Console", monospace;
-	display: inline-block;
-	border-radius: 6px;
-	padding: 0px 4px;
-	box-shadow: 3px 3px 3px #777;
-	margin: 0 0 4px 0;
-	vertical-align: text-bottom;
-	background: #eee;
-	font-weight: 500;
-	color: #555;
-	font-weight: 600;
+.reveal code.block {
+	display: block;
+	white-space: pre;
 }
-
-.center-table td:not(:first-child) {
-	text-align: center;
-}
-*/

@@ -1,4 +1,5 @@
-intro
+code highlighting
+
 Command Injection
 SQL Injection
 Insecure pickle
@@ -6,14 +7,13 @@ path traversal
 	start with string
 	better with library?
 Insecure modules (typosquatting)
+w3af / wapiti / ZAP
 
-
-describe how to grep
-	describe how to fix
-makefile to create pdf
+set up django
 
 
 
+makefile to create pdf?
 Further ideas:
 insecure password storage
 missing auth

@@ -6,5 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		slideNumber: 'c',
 		history: true,
 		center: false,
+		progress: true,
+		dependencies: [{
+			src: 'libs/plugin-highlight.js',
+			async: true,
+			callback: function() {
+				hljs.initHighlightingOnLoad();
+			}
+		}],
 	});
 });
