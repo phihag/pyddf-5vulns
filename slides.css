@@ -112,3 +112,12 @@
 	font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace;
 	line-height: 1.15em;
 }
+
+.correct-code {
+	width: 60px;
+	height: 60px;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	background: no-repeat center/contain url("checkmark.svg");
+}

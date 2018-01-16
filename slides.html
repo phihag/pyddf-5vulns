@@ -29,6 +29,11 @@
 <li style="margin-top:.8em" class="fragment">Wie erkenne ich verwundbaren Code?</li>
 <li style="margin-top:.8em" class="fragment">Wie schreibe ich sicheren Code?</li>
 </ul>
+<ul class="fragment" style="margin-top:1em;">
+<li>Achtung: Code in dieser Präsentation ist unsicher!</li>
+</ul>
+<pre class="fragment" style="margin-top:1em;position:relative;"><code class="python"># Richtiger Code ist mit ✓ markiert --&gt;</code><div class="correct-code"></div></pre>
+
 </section>
 
 <section id="command-injection">
@@ -44,7 +49,7 @@ def vulnerable_handler(request):
     return HttpResponse(
         '<html>Your: base64 {}!</html>'.format(b64))</code></pre>
 
-<p class="fragment" style="margin-top:1.5em">Was ist hier falsch?</p>
+<p class="fragment" style="margin-top:1.5em">Welche Eingaben sind hier problematisch?</p>
 </section>
 
 <section>

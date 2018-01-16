@@ -1,6 +1,6 @@
-code highlighting
-
 Command Injection
+	pty.spawn
+	code marking
 SQL Injection
 Insecure pickle
 path traversal
@@ -15,8 +15,9 @@ set up django
 
 makefile to create pdf?
 Further ideas:
-insecure password storage
-missing auth
+	CSRF
+	XSS
+	DNS rebinding attack
+	insecure password storage
+	missing auth
 Client-side security
-XSS
-CSRF
