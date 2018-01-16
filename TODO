@@ -1,6 +1,3 @@
-Command Injection
-	pty.spawn
-	code marking
 SQL Injection
 Insecure pickle
 path traversal
