@@ -124,12 +124,13 @@ b64 = subprocess.check_output(
 </pre>
 
 <ul style="margin-top: .5em;">
-<li>Strukturierte API, Kommandos werden als Listen übergeben</li>
+<li>Strukturierte API</li>
+<li>Kommandos werden als Listen übergeben</li>
+<li>Ein- Ausgaben als (Byte-)Strings</li>
 <li>secure by default</li>
 <li class="fragment" style="font-weight:bold;">Achtung vor <code>shell=True</code>!</li>
 </ul>
 </section>
-
 
 <section>
 <h2>Kommandozeile wenn möglich vermeiden!</h2>
@@ -166,8 +167,30 @@ b64 = base64.b64encode(
 <li>Anführungszeichen &amp; backticks (<code>"</code>, <code>'</code>, <code>`</code>)</li>
 <li><code>$</code>, <code>(</code></li>
 </ul>
-</div>
 </section>
+
+<section id="path-traversal">
+<h2>Code-Beispiel</h2>
+<pre><code class="block python">from django.http import HttpResponse
+import io
+
+def vulnerable_handler(request):
+    fn = '/var/myapp/data/' + request.GET['id']
+
+    with io.open(fn, encoding='utf-8') as f:
+        stored = f.read()
+
+    return HttpResponse(
+        '<html>Your stored file: {}</html>'.format(stored))</code></pre>
+
+<p class="fragment" style="margin-top:1.5em">Welche Eingaben sind hier problematisch?</p>
+</section>
+
+<section>
+<h2>Path Traversal</h2>
+
+</section>
+
 
 
 </div>

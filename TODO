@@ -1,17 +1,14 @@
-SQL Injection
-Insecure pickle
 path traversal
 	start with string
 	better with library?
+Insecure pickle
 Insecure modules (typosquatting)
 w3af / wapiti / ZAP
-
-set up django
-
 
 
 makefile to create pdf?
 Further ideas:
+	SQL Injection
 	CSRF
 	XSS
 	DNS rebinding attack
