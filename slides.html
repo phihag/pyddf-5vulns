@@ -171,9 +171,57 @@ b64 = base64.b64encode(
 
 
 <section id="sql-injection">
+<h2>Datenbankabfragen</h2>
+
+<pre><code class="block python">from django.http import HttpResponse
+import mysql
+
+cursor = mysql.connector.connect(...).cursor()
+
+def vulnerable_handler(request):
+    cursor.execute(
+        "SELECT txt FROM posts "
+        "WHERE id='{}'".format(request.GET['id']))
+
+    return HttpResponse(
+        '&lt;html&gt;{}&lt;/html&gt;'.format(next(cursor)[0]))</code></pre>
+<p class="fragment" style="margin-top:1.5em">Welche Eingaben sind hier problematisch?</p>
 
 </section>
 
+<section>
+<h2>SQL Injection</h2>
+
+<pre><code class="block python">cursor.execute(
+        "SELECT txt FROM posts "
+        "WHERE id='{}'".format(request.GET['id']))</code></pre>
+
+<div style="margin-top:1em">Eingabe: <code class="evil-input">42</code><br/>
+⚙ <code>SELECT txt FROM posts WHERE id='<span class="evil-input">42</span>'</code></div>
+
+<div style="margin-top:2em;" class="fragment"><div>Herausfinden ob der geheime Schlüssel mit a beginnt:</div>
+
+<div style="margin-top:1em">⚙ <code>SELECT txt FROM posts WHERE id='<span class="evil-input">42' AND
+(SELECT COUNT(*) FROM secrets
+WHERE private_key LIKE "a%") &gt; 0 AND ''='</span>'</code></div>
+</div>
+</section>
+
+
+<section>
+<h2>SQL Injection verhindern</h2>
+
+<div style="font-weight:bold;">Prepared Statements verwenden!</div>
+
+<pre style="margin-top:1em;position:relative"><code class="block python">cursor.execute(
+        "SELECT txt FROM posts WHERE id=%s",
+        (request.GET['id'],))</code><span class="correct-code"></span></pre>
+
+<ul style="margin-top:2em">
+<li>Achtung: %s wird an den MySQL-Treiber übergeben</li>
+<li><strong>Nicht</strong> mit dem %-Operator ersetzt!</li>
+</ul>
+</section>
 
 <section id="pickle">
 <h2>Deserialisierung mit pickle</h2>
