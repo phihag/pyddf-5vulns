@@ -1,14 +1,12 @@
-path traversal
-	start with string
-	better with library?
-Insecure pickle
+SQL Injection!
+Insecure pickle!
 Insecure modules (typosquatting)
+
+validate html
+
 w3af / wapiti / ZAP
-
-
 makefile to create pdf?
 Further ideas:
-	SQL Injection
 	CSRF
 	XSS
 	DNS rebinding attack

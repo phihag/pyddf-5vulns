@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
 <meta charset="utf-8" />
 <title>5 Sicherheitslücken in Deiner Python-Anwendung</title>
@@ -32,7 +32,7 @@
 <ul class="fragment" style="margin-top:1em;">
 <li>Achtung: Code in dieser Präsentation ist unsicher!</li>
 </ul>
-<pre class="fragment" style="margin-top:1em;position:relative;"><code class="python"># Richtiger Code ist mit ✓ markiert --&gt;</code><div class="correct-code"></div></pre>
+<pre class="fragment" style="margin-top:1em;position:relative;"><code class="python"># Richtiger Code ist mit ✓ markiert --&gt;</code><span class="correct-code"></span></pre>
 
 </section>
 
@@ -47,7 +47,7 @@ def vulnerable_handler(request):
     b64 = os.popen(cmd).read()
 
     return HttpResponse(
-        '<html>Your: base64 {}!</html>'.format(b64))</code></pre>
+        '&lt;html&gt; base64 {}!&lt;/html&gt;'.format(b64))</code></pre>
 
 <p class="fragment" style="margin-top:1.5em">Welche Eingaben sind hier problematisch?</p>
 </section>
@@ -98,7 +98,7 @@ Achtung: Sonderzeichen (hier <code>"</code> und <code>$</code>) müssen richtig 
 <pre style="margin-top: 1em;position:relative;"><code class="block python">import shlex
 cmd = 'echo {} | base64'.format(
     shlex.quote(request.POST['message']))
-b64 = os.popen(cmd).read()</code><div class="correct-code" style="opacity:0.2"></div></pre>
+b64 = os.popen(cmd).read()</code><span class="correct-code" style="opacity:0.2"></span></pre>
 
 <div style="margin-top: 1.5em">Eingabe: <code style="color:#c00;">a " b $ c ' d</code><br/>
 ⚙ <code>echo <span style="color:#c00;">'a " b $ c '"'"' d'</span> | base64</code>
@@ -120,7 +120,7 @@ b64 = subprocess.check_output(
     ['base64'],
     input=request.POST['message'].encode('utf-8'))
 </code>
-<div class="correct-code"></div>
+<span class="correct-code"></span>
 </pre>
 
 <ul style="margin-top: .5em;">
@@ -138,7 +138,7 @@ b64 = subprocess.check_output(
 <pre style="margin-top: .8em;position:relative;"><code class="block python">import base64
 b64 = base64.b64encode(
     request.POST['message'].encode('utf-8'))
-</code><div class="correct-code"></div></pre>
+</code><span class="correct-code"></span></pre>
 
 <ul class="fragment" style="margin-top: 1.5em">
 <li>Bibliothek in purem Python</li>
@@ -181,7 +181,7 @@ def vulnerable_handler(request):
         stored = f.read()
 
     return HttpResponse(
-        '<html>Your stored file: {}</html>'.format(stored))</code></pre>
+        '&lt;html&gt;stored: {}&lt;/html&gt;'.format(stored))</code></pre>
 
 <p class="fragment" style="margin-top:1.5em">Welche Eingaben sind hier problematisch?</p>
 </section>
@@ -189,9 +189,79 @@ def vulnerable_handler(request):
 <section>
 <h2>Path Traversal</h2>
 
+<pre style="margin-bottom:1em"><code>fn = '/var/myapp/data/' + request.GET['id']</code></pre>
+
+<div>Eingabe: <code style="color:#c00;">../../../etc/passwd</code><br/>
+⚙ <code>fn = <span class="hljs-string">'/var/myapp/data/'</span> + <span style="color:#c00;">'../../../etc/passwd'</span></code><br/>
+⇔ <code>fn = <span class="hljs-string">'/etc/passwd'</span></code></div>
+
+<div class="fragment" style="margin-top:2em;"><div><code>os.path.join</code> oder <code>pathlib</code> hilft nicht, sondern ermöglicht sogar noch mehr!</div>
+
+<pre><code class="python" style="margin-top:0.5em">&gt;&gt;&gt; import os.path
+&gt;&gt;&gt; os.path.join('/var/myapp/data', '/etc/passwd')
+'/etc/passwd'</code></pre>
+</div>
 </section>
 
+<section>
+<h2>Path Traversal vermeiden: Ohne Pfad</h2>
 
+<div>Wenn nur ein Dateiname und kein Pfad erwartet wird:</div>
+<div style="text-align:center;margin-top:0.5em;margin-bottom:2em;"><code style="font-weight:bold">os.path.basename</code>!</div>
+<code class="block no-highlight">fn = os.path.join(
+    <span class="hljs-string">'/var/myapp/data/'</span>,
+    <ins>os.path.basename(</ins>request.GET['id']<ins>)</ins>)</code>
+</section>
+
+<section>
+<h2>Path Traversal vermeiden: Mit Pfad</h2>
+<ul>
+<li>Leider bisher noch keine gute Lösung!</li>
+<li>Entweder: Pfad selber parsen (kompliziert &amp; fehleranfällig, insbesondere auf Windows)</li>
+<li>Oder: mit <code>os.path.abspath</code> überprüfen<br/>
+<pre style="margin-top:1em"><code class="block python">fn = os.path.abspath(os.path.join(
+    '/var/myapp/data/', request.GET['id']))
+if not fn.startswith('/var/myapp/data/'):
+    raise Exception('Path traversal attempt')
+</code></pre>
+</li>
+
+<li class="fragment" style="margin-top:2em">Weitere Probleme: Magische Dateinamen <code>CON</code>, <code>COM1</code>, <code>NUL</code> etc. unter Windows</li>
+</ul>
+</section>
+
+<section>
+<h2>Path Traversal erkennen &amp; ausschließen</h2>
+
+<ul>
+<li>Betroffen sind: Alle Dateisystemfunktionen!</li>
+<li>u.a. <code>open</code>, <code>io.open</code>, <code>os.listdir</code></li>
+<li>Augenmerk auf Containerformate richten
+<ul>
+    <li><code>zipfile</code> ist ok</li>
+    <li><code>tarfile</code> katastrophal unsicher</li>
+</ul></li>
+<li style="margin-top:1.5em" class="fragment">Wenn möglich:
+<ol>
+    <li>Datenbank statt Dateisystem verwenden</li>
+    <li>Dateipfad selber wählen (Datum, Hash o.ä.)</li>
+    <li>Nur basename übernehmen</li>
+    <li>Wenn's gar nicht anders geht: Sorgfältig überprüfen, besonders auf Windows!</li>
+</ol>
+</li>
+</ul>
+</section>
+
+<section>
+<div style="line-height:1.3em">Vortragsfolien online: <a href="https://phihag.de/2018/pyddf-5vulns/">https://phihag.de/2018/pyddf-5vulns/</a><br/>
+(auf <a href="https://phihag.de/">https://phihag.de/</a> verlinkt)</div>
+
+<div style="font-size:500%;text-align:center;margin:100px 0 60px 0;">Fragen?</div>
+
+<div style="text-align:center">Gerne auch per Mail an <a href="mailto:phihag@phihag.de?subject=PyDDF+5vulns-Votrag">phihag@phihag.de</a></div>
+
+<div style="margin-top:120px;color:#666">Interesse an einem Follow-Up <em>5 weitere Sicherheitslücken</em>?</div>
+</section>
 
 </div>
 

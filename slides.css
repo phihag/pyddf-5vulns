@@ -121,6 +121,7 @@
 }
 
 .correct-code {
+	display: block;
 	width: 60px;
 	height: 60px;
 	position: absolute;
@@ -132,4 +133,7 @@
 .reveal .insecure {
 	font-weight: bold;
 	margin-bottom: .5em;
+}
+.reveal em {
+	font-style: italic;
 }
