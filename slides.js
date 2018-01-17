@@ -15,4 +15,21 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		}],
 	});
+
+	var body = document.querySelector('body');
+
+	var _hide_cursor_timeout;
+	function hide_cursor() {
+		_hide_cursor_timeout = null;
+		body.style.cursor = 'none';
+	}
+	function show_cursor() {
+		if (_hide_cursor_timeout) {
+			clearTimeout(_hide_cursor_timeout);
+		} else {
+			body.style.cursor = 'default';
+		}
+		_hide_cursor_timeout = setTimeout(hide_cursor, 10000);
+	}
+	body.addEventListener('mousemove', show_cursor);
 });
