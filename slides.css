@@ -137,3 +137,9 @@
 .reveal em {
 	font-style: italic;
 }
+.reveal strong {
+	font-weight: bold;
+}
+.reveal .evil-input {
+	color: #c00;
+}
