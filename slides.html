@@ -170,6 +170,11 @@ b64 = base64.b64encode(
 </section>
 
 
+<section id="sql-injection">
+
+</section>
+
+
 <section id="pickle">
 <h2>Deserialisierung mit pickle</h2>
 
@@ -211,8 +216,6 @@ def vulnerable_handler(request):
 <li>Im Zweifelsfall Typen checken!</li>
 </ul>
 </section>
-
-
 
 
 <section id="path-traversal">
@@ -297,6 +300,72 @@ if not fn.startswith('/var/myapp/data/'):
 </li>
 </ul>
 </section>
+
+<section id="dependencies">
+<h2>Was ist hier falsch?</h2>
+
+<pre><code class="python block">from setuptools import setup
+
+setup(name='vulnerable-project',
+      version='0.1',
+      description='A vulnerable project',
+      author='Ingo Insecure',
+      install_requires=[
+          'Django', 'urlib3', 'raven',
+      ])</code></pre>
+</section>
+
+<section id="dependencies">
+<h2>Malicious PyPi packages</h2>
+
+<code class="no-highlight block hljs"><span class="hljs-keyword">from</span> setuptools <span class="hljs-keyword">import</span> setup
+
+setup(name=<span class="hljs-string">'vulnerable-project'</span>,
+      version=<span class="hljs-string">'0.1'</span>,
+      description=<span class="hljs-string">'A vulnerable project'</span>,
+      author=<span class="hljs-string">'Ingo Insecure'</span>,
+      install_requires=[
+          <span class="hljs-string">'Django'</span>, <span class="evil-input">'urlib3'</span>, <span class="hljs-string">'raven'</span>,
+      ])</code>
+<ul>
+<li style="margin-top:1em">Dieses Paket enthält url<strong class="evil-input">l</strong>ib3</li>
+<li>... und noch Extra-Code!</li>
+</ul>
+</section>
+
+<section>
+<h2>Sicherheit von Paketabhängigkeiten</h2>
+
+<ul>
+<li>Achtung bei der Aufnahme von Dependencies:<br/>Paketname am besten Kopieren und Einfügen</li>
+</ul>
+
+<ul class="fragment">
+<li>Allgemein:Jede Dependency kann Sicherheitslücken mitbringen:
+<ul>
+<li>Sicherheitslücken in dem Code</li>
+<li>Backdoors (z.B. weil persönlicher Laptop des Entwicklers gehackt)</li>
+<li>Sicherheitslücken in den dependencies der dependency</li>
+</ul>
+</li>
+</ul>
+</section>
+
+<section>
+<h2>Sichere Dependencies</h2>
+<ul class="fragment">
+<li>Codequalität verlangen</li>
+<li>Code lesen!</li>
+<li>CVEs lesen!</li>
+<li>Versionen pinnen!</li>
+<li>Hashsummen der Pakete pinnen!</li>
+<code class="block">Django==2.0.1 \
+    --hash=sha256:af18618ce3291be50928...
+</code>
+</ul>
+</ul>
+</section>
+
 
 <section>
 <div style="line-height:1.3em">Vortragsfolien online: <a href="https://phihag.de/2018/pyddf-5vulns/">https://phihag.de/2018/pyddf-5vulns/</a><br/>
