@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteRule ^websec$ https://phihag.de/2018/websec/ [R=302]
+RewriteRule ^websec/?$ /2018/pyddf-5vulns/slides_web.html
+RewriteRule ^websec/(.+)$ /2018/pyddf-5vulns/$1

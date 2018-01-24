@@ -1,12 +1,15 @@
+web:
+	CSRF
+	XSS
+	DNS rebinding attack
+
 reduce font size?
 
 validate html
 w3af / wapiti / ZAP
 makefile to create pdf?
-Further ideas:
-	CSRF
-	XSS
-	DNS rebinding attack
-	insecure password storage
+further topics:
+	HTTP header injection
+	Client-side security
 	missing auth
-Client-side security
+	insecure password storage
