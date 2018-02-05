@@ -1,7 +1,13 @@
 web:
+	security model
+	SOP
+
 	CSRF
 	XSS
 	DNS rebinding attack
+	rel = noopener
+	CSP
+go through it all
 
 reduce font size?
 

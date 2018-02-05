@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		history: true,
 		center: false,
 		progress: true,
+		controlsTutorial: false,
 		dependencies: [{
 			src: 'libs/plugin-highlight.js',
 			async: true,
