@@ -1,4 +1,6 @@
+create an example Django application
 web:
+	Login + logout
 	security model
 	SOP
 
@@ -8,6 +10,7 @@ web:
 	rel = noopener
 	CSP
 go through it all
+names for every slide
 
 reduce font size?
 

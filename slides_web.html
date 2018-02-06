@@ -35,23 +35,63 @@
 
 </section>
 
-<section id="command-injection">
-<h2>The world wide web: Running other people's code</h2>
+<section id="web-arch">
+<h2>The web: Running other people's code</h2>
 
-TODO: JavaScript-Einführung
-SOP
+<img src="web-arch.svg" style="width:100%;" />
+</section>
+
+<section>
+<h2>Web-Sicherheitsmodell</h2>
+
+<p><strong>Der Angreifer kann JavaScript-Code ausführen!</strong></p>
+
+<div>Szenario: Der Angreifer lockt den Benutzer auf <code>evil.com</code>, mit...</div>
+
+<ul>
+<li>Benutzer surft bösartige Webseiten an</li>
+<li>Phishing per Mail</li>
+<li>Phishing per Social Media</li>
+<li>Gehackte Webseiten</li>
+<li>Gehacktes <em>Werbenetzwerk</em></li>
+<li>...</li>
+</ul>
+</section>
+
+<section>
+<h2>Angriffsszenario</h2>
+<img src="web-arch-evil.svg" style="width:100%;" />
+</section>
+
+<section>
+<h2>Beispiel: Eine einfache Bank</h2>
+
+<pre><code class="block python">
+def transfer_money(request):
+  # TODO require login
+  return HttpResponse(
+      '&lt;html&gt; base64 {}!&lt;/html&gt;'.format(b64))</code></pre>
 
 
-<pre><code class="block python">from django.http import HttpResponse
-import os
+<div style="float:right;width:8em;margin-left:1em;padding:0.4em;border:2px solid #ddf">
+<form target="/transfer_money/" class="interactive_get_form">
+  <input name="cents" value="42" style="width:3em;text-align:right"/> € an
+  <input name="receiver" style="width:99%;" value="Max Muster"/>
+  <button>überweisen</button>
+  <div class="interactive_form_output"></div>
+</form>
+</div>
 
-def vulnerable_handler(request):
-    cmd = 'echo {} | base64'.format(
-        request.POST['message'])
-    b64 = os.popen(cmd).read()
 
-    return HttpResponse(
-        '&lt;html&gt; base64 {}!&lt;/html&gt;'.format(b64))</code></pre>
+<pre><code class="block html">&lt;form target="/transfer_money/"&gt;
+  &lt;input name="euro"/&gt; € an
+  &lt;input name="receiver"/&gt;
+  &lt;button&gt;überweisen&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+
+
+
 
 <p class="fragment" style="margin-top:1.5em">Welche Eingaben sind hier problematisch?</p>
 </section>
@@ -74,5 +114,6 @@ def vulnerable_handler(request):
 <script src="libs/head.1.0.3.min.js"></script>
 <script src="libs/reveal.js"></script>
 <script src="slides.js"></script>
+<script src="slides_web.js"></script>
 </body>
 </html>

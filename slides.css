@@ -143,3 +143,8 @@
 .reveal .evil-input {
 	color: #c00;
 }
+
+.reveal input,
+.reveal button {
+	font-size: inherit;
+}
