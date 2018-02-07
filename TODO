@@ -1,4 +1,9 @@
-create an example Django application
+implement in pure python
+	login
+	logout
+	simple example (maybe more later)
+	flake8
+
 web:
 	Login + logout
 	security model
@@ -8,7 +13,7 @@ web:
 	XSS
 	DNS rebinding attack
 	rel = noopener
-	CSP
+	CSP and other security headers
 go through it all
 names for every slide
 

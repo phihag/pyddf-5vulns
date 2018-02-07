@@ -75,17 +75,17 @@ def transfer_money(request):
 
 <div style="float:right;width:8em;margin-left:1em;padding:0.4em;border:2px solid #ddf">
 <form target="/transfer_money/" class="interactive_get_form">
-  <input name="cents" value="42" style="width:3em;text-align:right"/> € an
-  <input name="receiver" style="width:99%;" value="Max Muster"/>
+  <input name="e" value="42" style="width:3em;text-align:right"/> € an
+  <input name="to" style="width:99%;" value="Max Muster"/>
   <button>überweisen</button>
-  <div class="interactive_form_output"></div>
+  <div class="interactive_get_form_output"></div>
 </form>
 </div>
 
 
 <pre><code class="block html">&lt;form target="/transfer_money/"&gt;
-  &lt;input name="euro"/&gt; € an
-  &lt;input name="receiver"/&gt;
+  &lt;input name="e"/&gt; € an
+  &lt;input name="to"/&gt;
   &lt;button&gt;überweisen&lt;/button&gt;
 &lt;/form&gt;</code></pre>
 
