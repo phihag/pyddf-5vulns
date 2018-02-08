@@ -1,10 +1,6 @@
-implement in pure python
-	login
-	logout
-	simple example (maybe more later)
+demo with bottle!
 
 web:
-	Login + logout
 	security model
 	SOP
 

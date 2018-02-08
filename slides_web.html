@@ -73,17 +73,17 @@ def transfer_money(request):
       '&lt;html&gt; base64 {}!&lt;/html&gt;'.format(b64))</code></pre>
 
 
-<div style="float:right;width:8em;margin-left:1em;padding:0.4em;border:2px solid #ddf">
-<form target="/transfer_money/" class="interactive_get_form">
+<div style="padding:0.4em;border:2px solid #ddf">
+<form action="/transfer" class="interactive_get_form">
   <input name="e" value="42" style="width:3em;text-align:right"/> € an
-  <input name="to" style="width:99%;" value="Max Muster"/>
+  <input name="to" value="Max Muster" style="width:7em;"/>
   <button>überweisen</button>
   <div class="interactive_get_form_output"></div>
 </form>
 </div>
 
 
-<pre><code class="block html">&lt;form target="/transfer_money/"&gt;
+<pre><code class="block html">&lt;form action="/transfer"&gt;
   &lt;input name="e"/&gt; € an
   &lt;input name="to"/&gt;
   &lt;button&gt;überweisen&lt;/button&gt;
