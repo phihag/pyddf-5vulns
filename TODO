@@ -2,7 +2,6 @@ implement in pure python
 	login
 	logout
 	simple example (maybe more later)
-	flake8
 
 web:
 	Login + logout
@@ -18,6 +17,7 @@ go through it all
 names for every slide
 
 reduce font size?
+travis lint
 
 validate html
 w3af / wapiti / ZAP

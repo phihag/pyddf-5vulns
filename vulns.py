@@ -12,7 +12,7 @@ import sys
 
 
 class VulnHandler(http.server.BaseHTTPRequestHandler):
-    views = []
+    views_by_method = {}
 
     def send_text(self, txt, mime='text/html;charset=utf-8'):
         self.send_response(200)
@@ -24,19 +24,25 @@ class VulnHandler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(txt.encode('utf-8'))
 
-    def do_GET(self):
-        for (rex, v) in self.views:
+    def handle_parsed_request(self):
+        views = self.views_by_method.get(self.command, [])
+        for (rex, v) in views:
             if rex.match(self.path):
                 return v(self)
 
         self.send_error(404)
 
+    do_GET = handle_parsed_request
+    do_POST = handle_parsed_request
+    do_HEAD = handle_parsed_request
 
-def view(rex_str):
+
+def view(rex_str, method='GET'):
     rex = re.compile(rex_str)
 
     def decorate(func):
-        VulnHandler.views.append((rex, func))
+        views = VulnHandler.views_by_method.setdefault(method, [])
+        views.append((rex, func))
         return func
 
     return decorate
@@ -77,17 +83,20 @@ def _root_handler(handler):
     <body>''' + ('''
         <form action="/logout" method="post" style="margin-bottom:2em">
         <button>Logout</button>
-        </form>''' if cur_user(handler) else '''
-    <form action="/login" method="post" style="margin-bottom:2em">
-    <input type="text" name="user" />
-    <input type="password" name="password" />
-    <button>Login</button>
-    </form>
-    ''') + '''<form target="/transfer_money/">
+        </form>
+
+    <form target="/transfer_money/">
       <input name="euro" value="42"/> € an
       <input name="receiver" value="Max Muster"/>
       <button>überweisen</button>
     </form>
+    ''' if cur_user(handler) else '''
+    <form action="/login" method="post" style="margin-bottom:2em">
+    <input type="text" name="user" placeholder="Benutzername" autofocus="autofocus" />
+    <input type="password" name="password" placeholder="Passwort" />
+    <button>Login</button>
+    </form>
+    ''') + '''
         </body></html>''')
 
 
