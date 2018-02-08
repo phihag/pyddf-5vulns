@@ -4,8 +4,11 @@ import argparse
 import http.cookies
 import http.server
 import json
-import re
 import multiprocessing
+import os
+import re
+import subprocess
+import sys
 
 
 class VulnHandler(http.server.BaseHTTPRequestHandler):
@@ -46,7 +49,7 @@ def _get_cookie(headers, key, default=None):
 
 
 def cur_user(handler):
-    session_json = _get_cookie('vulns_session')
+    session_json = _get_cookie(handler.headers, 'vulns_session')
     if not session_json:
         return None
     session_data = json.loads(session_json)
@@ -93,7 +96,6 @@ def login_view(handler):
     print(handler.method)
 
 
-
 def main():
     parser = argparse.ArgumentParser(description='vulnerable web server')
     parser.add_argument(
@@ -115,6 +117,7 @@ def main():
     else:
         run_server(args)
 
+
 def run_server(args):
     httpd = http.server.HTTPServer((args.addr, args.port), VulnHandler)
     httpd.serve_forever()
@@ -123,6 +126,13 @@ def run_server(args):
 def dev(args):
     p = multiprocessing.Process(target=run_server, args=(args,))
     p.start()
+
+    subprocess.check_output(['inotifywait', '-q', '-e', 'close_write', __file__])
+
+    p.terminate()
+    p.join()
+
+    os.execv(__file__, sys.argv)
 
 
 if __name__ == '__main__':

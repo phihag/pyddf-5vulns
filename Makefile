@@ -1,6 +1,5 @@
 dev:
-	while true; do ./vulns.py & vulns_pid=$$!; inotifywait -e close_write vulns.py ; kill "$${vulns_pid}"; done
-
+	./vulns.py --dev
 
 demo:
 	./vulns.py
