@@ -1,5 +1,3 @@
-demo with bottle!
-
 web:
 	security model
 	SOP
@@ -9,6 +7,7 @@ web:
 	DNS rebinding attack
 	rel = noopener
 	CSP and other security headers
+clickjacking?
 go through it all
 names for every slide
 

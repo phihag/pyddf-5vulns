@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="libs/hljs-style.css" />
 <link rel="stylesheet" href="libs/reveal.css" />
 <link rel="stylesheet" href="slides.css" />
+<link rel="stylesheet" href="slides_web.css" />
 </head>
 <body>
 
@@ -66,13 +67,6 @@
 <section>
 <h2>Beispiel: Eine einfache Bank</h2>
 
-<pre><code class="block python">
-def transfer_money(request):
-  # TODO require login
-  return HttpResponse(
-      '&lt;html&gt; base64 {}!&lt;/html&gt;'.format(b64))</code></pre>
-
-
 <div style="padding:0.4em;border:2px solid #ddf">
 <form action="/transfer" class="interactive_get_form">
   <input name="e" value="42" style="width:3em;text-align:right"/> € an
@@ -82,7 +76,6 @@ def transfer_money(request):
 </form>
 </div>
 
-
 <pre><code class="block html">&lt;form action="/transfer"&gt;
   &lt;input name="e"/&gt; € an
   &lt;input name="to"/&gt;
@@ -90,10 +83,17 @@ def transfer_money(request):
 &lt;/form&gt;</code></pre>
 
 
+<pre style="margin-top:2em;"><code class="block python">@bottle.route('/transfer')
+@require_user
+def transfer(user):
+    e = bottle.request.query['e']
+    to = bottle.request.query['to']
+    # TODO: Überweisungslogik hier
+    return '%s € wurde von %s an %s überwiesen!' % (
+      e, user, to)
+</code></pre>
 
 
-
-<p class="fragment" style="margin-top:1.5em">Welche Eingaben sind hier problematisch?</p>
 </section>
 
 
