@@ -1,12 +1,16 @@
 web:
-	security model
-	SOP
-
 	CSRF
+		list for django etc.
+
+	SOP
 	XSS
 	DNS rebinding attack
 	rel = noopener
-	CSP and other security headers
+	CSP
+	samesite  / secure / httpOnly cookies
+	X-Frame-Options
+	No-Sniff
+	other security headers?
 clickjacking?
 go through it all
 names for every slide

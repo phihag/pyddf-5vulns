@@ -20,7 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			const fd = new FormData(form);
 			const qs = Array.from(fd.entries()).map(
 				e => encodeURIComponent(e[0]) + '=' + encodeURIComponent(e[1])).join('&');
-			_text(form.querySelector('.interactive_get_form_output'), qs);
+			const out_el = form.querySelector('.interactive_get_form_output');
+			const prefix = out_el.getAttribute('data-prefix');
+			const url = (prefix || '') + qs;
+			_text(out_el, url);
 		});
 	}
 });
