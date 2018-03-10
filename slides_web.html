@@ -72,38 +72,24 @@
   &lt;button&gt;überweisen&lt;/button&gt;
 &lt;/form&gt;</code></pre>
 
-<div style="padding:0.4em;margin-bottom:1em;border:2px solid #ddf">
-<form action="/transfer" class="interactive_get_form">
+<form action="/transfer" style="margin-top:2em;" class="interactive_get_form">
+<div style="padding:0.4em;border:2px solid #ddf">
   <input name="e" value="42" style="width:3em;text-align:right"/> € an
   <input name="to" value="Max Muster" style="width:7em;"/>
   <button>überweisen</button>
-  <div class="interactive_get_form_output" data-prefix="GET https://bank.example/transfer?"></div>
-</form>
 </div>
 
-<pre class="fragment" style="margin-top:2em;"><code class="block python">@bottle.route('/transfer')
-@require_user
-def transfer(user):
-    e = bottle.request.query['e']
-    to = bottle.request.query['to']
-    # Überweisungslogik hier
-    return '%s € wurde von %s an %s überwiesen!' % (
-      e, user, to)
-</code></pre>
+<p style="font-style: italic;margin-top:1em">Der Browser sendet ....</p>
+<code class="nohighlight">GET /transfer?<span class="interactive_get_form_output">e=42&amp;to=Max%20Muster</span> HTTP/1.1
+Host: bank.example
+Cookie: session=19e73828937f05e6f709e29efdb0a82b</code>
+</p>
+</form>
 </section>
+
 
 <section>
 <h2>Cross-Site Request Forgery (CSRF)</h2>
-
-Echtes Formular:
-<div style="padding:0.4em;margin-bottom:1em;border:2px solid #ddf">
-<form action="/transfer" class="interactive_get_form">
-  <input name="e" value="42" style="width:3em;text-align:right"/> € an
-  <input name="to" value="Max Muster" style="width:7em;"/>
-  <button>überweisen</button>
-  <div class="interactive_get_form_output" data-prefix="GET https://bank.example/transfer?">GET https://bank.example/transfer?e=42&amp;to=Max%20Muster</div>
-</form>
-</div>
 
 <p>
 Der Angreifer bettet auf seiner Domain ein:
@@ -112,13 +98,25 @@ Der Angreifer bettet auf seiner Domain ein:
  src="https://bank.example/transfer?e=999&amp;to=Angreifer"/&gt;</code></pre>
 </p>
 
+<div class="fragment">
+<p style="font-style: italic;margin-top:1em">Der Browser sendet ....</p>
+<code class="nohighlight">GET /transfer?<span class="interactive_get_form_output">e=999&amp;to=Angreifer</span> HTTP/1.1
+Host: bank.example
+Cookie: session=19e73828937f05e6f709e29efdb0a82b</code>
+</p>
+</div>
+
 <ul class="fragment" style="margin-top:0.5em">
   <li>Der Webbrowser lädt "Bild" <code>https://bank.example/transfer?e=999&amp;to=Angreifer</code></li>
-  <li>Aus Sicht des Servers: Kein Unterschied zu legitimer Überweisung!</li>
+  <li><strong>Aus Sicht des Servers: Kein Unterschied zu legitimer Überweisung!</strong></li>
 </ul>
-
 </section>
 
+<section>
+<h2>Cross-Site Request Forgery (CSRF): Verteidigung</h2>
+
+TODO: POST verwenden
+</section>
 
 
 

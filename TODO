@@ -1,6 +1,8 @@
 web:
 	CSRF
-		list for django etc.
+		POST example
+		defense
+		list defense for django etc.
 
 	SOP
 	XSS
