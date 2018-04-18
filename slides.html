@@ -98,7 +98,7 @@ Achtung: Sonderzeichen (hier <code>"</code> und <code>$</code>) müssen richtig 
 <pre style="margin-top: 1em;position:relative;"><code class="block python">import shlex
 cmd = 'echo {} | base64'.format(
     shlex.quote(request.POST['message']))
-b64 = os.popen(cmd).read()</code><span class="correct-code" style="opacity:0.2"></span></pre>
+b64 = os.popen(cmd).read()</code><span class="correct-code" style="opacity:0.1"></span></pre>
 
 <div style="margin-top: 1.5em">Eingabe: <code class="evil-input">a " b $ c ' d</code><br/>
 ⚙ <code>echo <span class="evil-input">'a " b $ c '"'"' d'</span> | base64</code>
